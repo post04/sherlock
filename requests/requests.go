@@ -72,11 +72,12 @@ func CheckValidity(resp *http.Response, arguments ...interface{}) bool {
 		if err != nil {
 			return false
 		}
-		toCheck := jsonParsed.Path(strings.Replace(arguments[1].(string), "!", "", 1)).String()
+		toCheck := fmt.Sprint(jsonParsed.Path(strings.Replace(arguments[1].(string), "!", "", 1)).Data())
+
 		if strings.HasPrefix(arguments[1].(string), "!") {
-			return toCheck != strings.Replace(fmt.Sprintf("%v", arguments[2]), "!", "", 1)
+			return toCheck != strings.Replace(arguments[2].(string), "!", "", 1)
 		}
-		return toCheck == fmt.Sprintf("%v", arguments[2])
+		return toCheck == arguments[2].(string)
 	default:
 		return false
 	}
