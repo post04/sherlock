@@ -1,9 +1,12 @@
 package requests
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/Jeffail/gabs"
 )
 
 // NewRequest builds a new request based off input arguments, returns http.Request (nil if err isn't nil)
@@ -15,7 +18,9 @@ func NewRequest(method, url, username, body string, headers [][]string) *http.Re
 			return nil
 		}
 		for _, header := range headers {
-			req.Header.Set(header[0], header[1])
+			if len(header) == 2 {
+				req.Header.Set(header[0], header[1])
+			}
 		}
 		return req
 	}
@@ -59,20 +64,19 @@ func CheckValidity(resp *http.Response, arguments ...interface{}) bool {
 	case "struct":
 		// W.I.P for now just try to use the body matching with structs
 
-		// b, err := io.ReadAll(resp.Body)
-		// if err != nil {
-		// 	return false
-		// }
-		// var check interface{}
-		// err = json.Unmarshal(b, &check)
-		// if err != nil {
-		// 	return false
-		// }
-		// if arguments[1].(bool) {
-		// 	check[arguments[2].(string)] == arguments[3]
-		// }
-		// return check[arguments[2].(string)] != arguments[3]
-		return false
+		b, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return false
+		}
+		jsonParsed, err := gabs.ParseJSON(b)
+		if err != nil {
+			return false
+		}
+		toCheck := jsonParsed.Path(strings.Replace(arguments[1].(string), "!", "", 1)).String()
+		if strings.HasPrefix(arguments[1].(string), "!") {
+			return toCheck != strings.Replace(fmt.Sprintf("%v", arguments[2]), "!", "", 1)
+		}
+		return toCheck == fmt.Sprintf("%v", arguments[2])
 	default:
 		return false
 	}

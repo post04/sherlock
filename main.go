@@ -14,13 +14,14 @@ import (
 
 // SitesStruct is what's seen in the sites.json file
 type SitesStruct struct {
-	URL      string      `json:"url"`
-	PrintURL string      `json:"printURL"`
-	Method   string      `json:"method"`
-	Check    string      `json:"check"`
-	Body     string      `json:"body"`
-	Match    interface{} `json:"match"`
-	Headers  [][]string  `json:"headers"`
+	URL         string      `json:"url"`
+	PrintURL    string      `json:"printURL"`
+	Method      string      `json:"method"`
+	Check       string      `json:"check"`
+	Body        string      `json:"body"`
+	Match       interface{} `json:"match"`
+	StructMatch interface{} `json:"structMatch"`
+	Headers     [][]string  `json:"headers"`
 }
 
 func main() {
@@ -59,7 +60,7 @@ func main() {
 				color.HiRed("[ ] " + strings.Split(strings.Split(site.URL, "//")[1], "/")[0])
 				return
 			}
-			if requests.CheckValidity(resp, site.Check, site.Match) {
+			if requests.CheckValidity(resp, site.Check, site.Match, site.StructMatch) {
 				color.HiGreen(fmt.Sprintf("[X] %s", strings.Replace(site.URL, "{}", name, 1)))
 			} else {
 				color.HiRed("[ ] " + strings.Split(strings.Split(site.URL, "//")[1], "/")[0])

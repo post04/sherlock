@@ -3,10 +3,11 @@
         "url": "https://gql.twitch.tv/gql",
         "printURL": "https://twitch.tv/{}",
         "method": "POST",
-        "check": "body",
-        "body": "{\n\"operationName\": \"PlaybackAccessToken_Template\",\n\"query\": \"query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}\",\n\"variables\": {\n\"isLive\": true,\n\"login\": \"{}\",\n\"isVod\": false,\n\"vodID\": \"\",\n\"playerType\": \"site\"\n}\n}",
-        "match": "!{\"streamPlaybackAccessToken\":null}",
-        "headers": [["Client-ID", "kimne78kx3ncx6brgo4mv6wki5h1ko"]]
+        "check": "struct",
+        "body": "{\n    \"operationName\": \"PlaybackAccessToken_Template\",\n    \"query\": \"query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: \\\"web\\\", playerBackend: \\\"mediaplayer\\\", playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \\\"web\\\", playerBackend: \\\"mediaplayer\\\", playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}\",\n    \"variables\": {\n        \"isLive\": true,\n        \"login\": \"{}\",\n        \"isVod\": false,\n        \"vodID\": \"\",\n        \"playerType\": \"site\"\n    }\n}",
+        "match": "!data.streamPlaybackAccessToken",
+        "structMatch": "!{}",
+        "headers": [["Client-ID", "kimne78kx3ncx6brgo4mv6wki5h1ko"], ["User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"]]
     },
     {
         "url": "https://github.com/{}",
